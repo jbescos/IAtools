@@ -9,16 +9,16 @@
 		<version>1.5.10.RELEASE</version>
 	</parent>
 	<groupId>es.tododev</groupId>
-	<artifactId>Torrent</artifactId>
+	<artifactId>IAtools</artifactId>
 	<packaging>pom</packaging>
-	<version>${torrent.version}</version>
+	<version>${root.version}</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<torrent.version>0.1</torrent.version>
+		<maven.compiler.source>1.9</maven.compiler.source>
+		<maven.compiler.target>1.9</maven.compiler.target>
+		<root.version>0.1</root.version>
 	</properties>
 
 	<modules>

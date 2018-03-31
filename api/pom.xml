@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>es.tododev</groupId>
-		<artifactId>Torrent</artifactId>
-		<version>${torrent.version}</version>
+		<artifactId>IAtools</artifactId>
+		<version>${root.version}</version>
 	</parent>
 	<artifactId>api</artifactId>
 	<packaging>jar</packaging>
