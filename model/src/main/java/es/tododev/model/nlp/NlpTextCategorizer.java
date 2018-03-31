@@ -2,7 +2,6 @@ package es.tododev.model.nlp;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,12 +17,11 @@ import opennlp.tools.doccat.DoccatModel;
 import opennlp.tools.doccat.DocumentCategorizerME;
 import opennlp.tools.doccat.DocumentSample;
 import opennlp.tools.doccat.DocumentSampleStream;
-import opennlp.tools.ml.AbstractTrainer;
+import opennlp.tools.ml.naivebayes.NaiveBayesTrainer;
 import opennlp.tools.util.MarkableFileInputStreamFactory;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
 import opennlp.tools.util.TrainingParameters;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,21 +49,21 @@ public class NlpTextCategorizer {
 	public void trainCategorizer(File trainingFile, OutputStream modelOut, String language) throws IOException {
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new MarkableFileInputStreamFactory(trainingFile), "UTF-8");
 		ObjectStream<DocumentSample> sampleStream = new DocumentSampleStream(lineStream);
-		TrainingParameters parameters = new TrainingParameters();
-		parameters.put(AbstractTrainer.CUTOFF_PARAM, "1");
+		TrainingParameters trainingParameters = new TrainingParameters();
+//	    trainingParameters.put(TrainingParameters.ALGORITHM_PARAM, ModelType.MAXENT.name());
+		trainingParameters.put(TrainingParameters.ALGORITHM_PARAM, NaiveBayesTrainer.NAIVE_BAYES_VALUE);
+	    trainingParameters.put(TrainingParameters.ITERATIONS_PARAM, "100");
+	    trainingParameters.put(TrainingParameters.CUTOFF_PARAM, "0");
+	    trainingParameters.put(TrainingParameters.THREADS_PARAM, "100");
+//		parameters.put(AbstractTrainer.CUTOFF_PARAM, "1");
 		DoccatFactory factory = new DoccatFactory();
-		DoccatModel model = DocumentCategorizerME.train(language, sampleStream, parameters, factory);
+		DoccatModel model = DocumentCategorizerME.train(language, sampleStream, trainingParameters, factory);
 		model.serialize(modelOut);
 	}
 	
 	public void addInTraininFile(File trainDataFile, String category, String content) throws IOException {
-		String[] lines = content.replaceAll("\r", "").split("\n");
 		try(FileWriter fw = new FileWriter(trainDataFile, true)){
-			for(String line : lines) {
-				if(!line.trim().isEmpty()) {
-					fw.write(category+" "+line+"\n");
-				}
-			}
+			fw.write(category+" "+content.replaceAll("\r", "").replaceAll("\n", " ")+"\n");
 		}
 		
 	}
