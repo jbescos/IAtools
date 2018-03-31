@@ -25,7 +25,7 @@ import opennlp.tools.util.TrainingParameters;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class TextCathegorizer {
+public class NlpTextCathegorizer {
 
 	private final static Logger log = LogManager.getLogger();
 	
