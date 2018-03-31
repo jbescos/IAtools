@@ -24,11 +24,11 @@ public class ZipUtils {
 	private final static int BUFFER = 1048000;
 
 	public static void walkInZip(InputStream zipFile, Consumer<ZipFile> zipEntryConsumer) throws IOException {
+		log.debug("Processing zip");
 		try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(zipFile))) {
 			ZipEntry entry;
 			String directory = null;
 			while ((entry = zis.getNextEntry()) != null) {
-				log.debug("Processing {}", entry.getName());
 				if (!entry.isDirectory()) {
 					StringBuilder text = new StringBuilder();
 					int read = 0;
@@ -42,6 +42,7 @@ public class ZipUtils {
 				}
 			}
 		}
+		log.debug("Finish processing zip");
 	}
 	
 	public static class ZipFile {
@@ -56,6 +57,10 @@ public class ZipUtils {
 		}
 		public String getContent() {
 			return content;
+		}
+		@Override
+		public String toString() {
+			return "directory="+directory+", content="+content;
 		}
 	}
 
