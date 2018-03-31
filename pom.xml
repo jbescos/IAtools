@@ -24,6 +24,7 @@
 	<modules>
 		<module>api</module>
 		<module>gui</module>
+		<module>model</module>
 	</modules>
 
 	<dependencies>
