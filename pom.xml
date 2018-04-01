@@ -22,6 +22,7 @@
 		<root.version>0.1</root.version>
 		<opennlp.version>1.8.4</opennlp.version>
 		<junit.version>4.12</junit.version>
+		<dl4j.version>0.9.1</dl4j.version>
 	</properties>
 
 	<modules>
