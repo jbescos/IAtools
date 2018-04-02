@@ -50,12 +50,15 @@ public class ZipUtils {
 			while ((entry = zis.getNextEntry()) != null) {
 				String fileName = entry.getName();
 				File newFile = new File(outputFolder.getAbsolutePath() + File.separator + fileName);
-				log.debug("File unzip: {}", newFile.getAbsoluteFile());
-				new File(newFile.getParent()).mkdirs();
-				try(FileOutputStream fos = new FileOutputStream(newFile)){
-					int len;
-					while ((len = zis.read(buffer)) > 0) {
-						fos.write(buffer, 0, len);
+				if(entry.isDirectory()) {
+					newFile.mkdirs();
+				}else {
+					log.debug("File unzip: {}", newFile.getAbsoluteFile());
+					try(FileOutputStream fos = new FileOutputStream(newFile)){
+						int len;
+						while ((len = zis.read(buffer)) > 0) {
+							fos.write(buffer, 0, len);
+						}
 					}
 				}
 			}
