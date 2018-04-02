@@ -51,12 +51,10 @@ public class ModelsTest {
 	
 	@Test
 	public void vectorClassifierTest() throws IOException {
-		File unzipped = Files.createTempDirectory(null).toFile();
-		log.debug("Creating file in {}", unzipped.getAbsolutePath());
-		try(InputStream zip = zipFileURL.openStream()){
-			ZipUtils.unzip(zip, unzipped);
-		}
-		VectorClassifier vector = new VectorClassifier(unzipped);
+		ClassPathResource resource = new ClassPathResource(TRAIN_DATA);
+		VectorClassifier vector = new VectorClassifier(resource.getFile());
+		String result = vector.categorize("Beatriz likes to play futbol on Sundays.");
+		log.info("Result {}", result);
 	}
 	
 	private NlpTextCategorizer createNlpTextCategorizer(List<ZipInfo> tests) throws FileNotFoundException, IOException {

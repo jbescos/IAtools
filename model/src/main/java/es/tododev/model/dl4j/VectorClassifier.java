@@ -1,6 +1,8 @@
 package es.tododev.model.dl4j;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,10 +31,21 @@ public class VectorClassifier {
 		paragraphVectors.fit();
 		log.debug("Model trained");
 	}
+	
+	private void scanSources(List<File> sources, File current) {
+		for(File children : current.listFiles()) {
+			if(!children.isDirectory()) {
+				log.debug("Found source {}", current.getName());
+				sources.add(current);
+				break;
+			}else {
+				scanSources(sources, children);
+			}
+		}
+	}
 
 	public String categorize(String text) {
-		// TODO
-		return null;
+		return paragraphVectors.predict(text);
 	}
 
 }
