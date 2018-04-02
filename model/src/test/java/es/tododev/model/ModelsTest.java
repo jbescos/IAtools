@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.deeplearning4j.models.paragraphvectors.ParagraphVectors;
 import org.deeplearning4j.text.documentiterator.LabelledDocument;
 import org.junit.Test;
 
-import es.tododev.model.dl4j.VectorClassifier;
+import es.tododev.model.dl4j.CategorizerModel;
+import es.tododev.model.dl4j.VectorCategorizer;
 import es.tododev.model.utils.ZipUtils;
 import es.tododev.model.utils.ZipUtils.ZipInfo;
 
@@ -27,8 +29,8 @@ public class ModelsTest {
 		List<LabelledDocument> documents = new ArrayList<>();
 		try(InputStream inputStream = zipFileURL.openStream()){
 			ZipUtils.walkInZip(inputStream, entry -> {
-				int rnd = getRandom(0, 9);
-				if(rnd == 1) {
+				int rnd = getRandom(0, 4);
+				if(rnd == 0) {
 					tests.add(entry);
 				}else {
 					LabelledDocument doc = new LabelledDocument();
@@ -38,12 +40,13 @@ public class ModelsTest {
 				}
 			});
 		}
-		VectorClassifier vector = VectorClassifier.createFromList(documents);
+		ParagraphVectors paragraphVectors = CategorizerModel.createFromList(documents);
+		ICategorizer categorizer = new VectorCategorizer(paragraphVectors);
 		int success = 0;
 		int total = 0;
 		for(ZipInfo test : tests) {
 			total++;
-			String label = vector.categorize(test.getContent());
+			String label = categorizer.categorize(test.getContent());
 			if(label.equals(test.getDirectory())) {
 				success++;
 			}
