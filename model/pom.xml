@@ -12,16 +12,6 @@
 	<groupId>es.tododev.model</groupId>
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.opennlp</groupId>
-			<artifactId>opennlp-tools</artifactId>
-			<version>${opennlp.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.opennlp</groupId>
-			<artifactId>opennlp-uima</artifactId>
-			<version>${opennlp.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.deeplearning4j</groupId>
 			<artifactId>deeplearning4j-core</artifactId>
 			<version>${dl4j.version}</version>
