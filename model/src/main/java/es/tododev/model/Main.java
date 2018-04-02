@@ -23,9 +23,9 @@ public class Main {
 	private final static String MODEL = "model";
 	private final static String TRAIN = "train";
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Actions action = Actions.getAction(args);
-
+		action.execute(args);
 	}
 	
 	private static String findValue(String key, String[] args, boolean required) {
@@ -70,6 +70,7 @@ public class Main {
 				String text = findValue(CATEGORIZE, args, true);
 				String model = findValue(MODEL, args, true);
 				ParagraphVectors paragraphVectors = CategorizerModel.loadModel(new File(model));
+				log.info("Text: {}", text);
 				log.info(paragraphVectors.predict(text));
 			}
 		};

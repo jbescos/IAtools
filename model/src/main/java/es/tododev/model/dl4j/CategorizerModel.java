@@ -39,7 +39,11 @@ public class CategorizerModel {
 	}
 	
 	public static ParagraphVectors loadModel(File model) throws IOException {
-		return WordVectorSerializer.readParagraphVectors(model);
+		ParagraphVectors paragraphVectors = WordVectorSerializer.readParagraphVectors(model);
+		TokenizerFactory t = new DefaultTokenizerFactory();
+        t.setTokenPreProcessor(new CommonPreprocessor());
+		paragraphVectors.setTokenizerFactory(t);
+		return paragraphVectors;
 	}
 	
 }
