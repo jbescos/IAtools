@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.datavec.api.util.ClassPathResource;
+import org.deeplearning4j.text.documentiterator.LabelledDocument;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -28,8 +29,9 @@ public class ModelsTest {
 	
 	private final static Logger log = LogManager.getLogger();
 	// [tech, politics, business, entertainment, sport]
-	private final static String TRAIN_DATA = "/data/bbc-fulltext.zip";
-	private final URL zipFileURL = getClass().getResource(TRAIN_DATA);
+	private final static String TRAIN_DATA_1 = "/data/bbc-fulltext.zip";
+	private final URL zipFileURL = getClass().getResource(TRAIN_DATA_1);
+	private final static String TRAIN_DATA_2 = "/data/paravec/labeled";
 	
 	@Test
 	@Ignore
@@ -51,10 +53,32 @@ public class ModelsTest {
 	
 	@Test
 	public void vectorClassifierTest() throws IOException {
-		ClassPathResource resource = new ClassPathResource(TRAIN_DATA);
-		VectorClassifier vector = new VectorClassifier(resource.getFile());
-		String result = vector.categorize("Beatriz likes to play futbol on Sundays.");
-		log.info("Result {}", result);
+		List<ZipInfo> tests = new ArrayList<>();
+		List<LabelledDocument> documents = new ArrayList<>();
+		try(InputStream inputStream = zipFileURL.openStream()){
+			ZipUtils.walkInZip(inputStream, entry -> {
+				int rnd = getRandom(0, 9);
+				if(rnd == 1) {
+					tests.add(entry);
+				}else {
+					LabelledDocument doc = new LabelledDocument();
+					doc.setContent(entry.getContent());
+					doc.addLabel(entry.getDirectory());
+					documents.add(doc);
+				}
+			});
+		}
+		VectorClassifier vector = VectorClassifier.createFromList(documents);
+		int success = 0;
+		int total = 0;
+		for(ZipInfo test : tests) {
+			total++;
+			String label = vector.categorize(test.getContent());
+			if(label.equals(test.getDirectory())) {
+				success++;
+			}
+		}
+		log.debug("Success {} of {}", success, total);
 	}
 	
 	private NlpTextCategorizer createNlpTextCategorizer(List<ZipInfo> tests) throws FileNotFoundException, IOException {
