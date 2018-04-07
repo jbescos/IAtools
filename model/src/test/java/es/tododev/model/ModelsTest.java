@@ -1,5 +1,6 @@
 package es.tododev.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
@@ -20,30 +21,30 @@ import es.tododev.model.utils.ZipUtils;
 public class ModelsTest {
 	
 	private final static Logger log = LogManager.getLogger();
-	// [tech, politics, business, entertainment, sport]
 	private final static String TRAIN_DATA_1 = "/data/labeled.zip";
 	private final URL zipFileURL = getClass().getResource(TRAIN_DATA_1);
+	private final static String SENTENCE = "This is a test example";
 	
 	@Test
-	public void vectorClassifierTest() throws IOException {
+	public void createModelTestSaveAndLoadTest() throws IOException {
 		File unzipped = Files.createTempDir();
 		unzipped.deleteOnExit();
 		try(InputStream inputStream = zipFileURL.openStream()){
 			ZipUtils.unzip(inputStream, unzipped);
 		}
 		ParagraphVectors paragraphVectors = CategorizerModel.createFromFile(unzipped);
+		ICategorizer categorizer = new VectorCategorizer(paragraphVectors);
+		String category = categorizer.categorize(SENTENCE);
+		log.info("Category: {}", category);
+		assertNotNull(category);
 		File model = File.createTempFile("model", ".zip");
 		model.deleteOnExit();
 		CategorizerModel.saveModel(model, paragraphVectors);
 		paragraphVectors = CategorizerModel.loadModel(model);
-		ICategorizer categorizer = new VectorCategorizer(paragraphVectors);
-		String category = categorizer.categorize("This is a test");
-		log.info("Category: {}", category);
-		assertNotNull(category);
+		categorizer = new VectorCategorizer(paragraphVectors);
+		String category2 = categorizer.categorize(SENTENCE);
+		log.info("Category2: {}", category);
+		assertEquals(category, category2);
 	}
-	
-	private int getRandom(int lower, int upper) {
-		return (int) (Math.random() * (upper - lower)) + lower;
-	}
-	
+
 }

@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.paragraphvectors.ParagraphVectors;
+import org.deeplearning4j.models.word2vec.VocabWord;
 import org.deeplearning4j.text.documentiterator.FileLabelAwareIterator;
 import org.deeplearning4j.text.documentiterator.LabelAwareIterator;
 import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.CommonPreprocessor;
@@ -25,6 +26,7 @@ public class CategorizerModel {
 		ParagraphVectors paragraphVectors = new ParagraphVectors.Builder().learningRate(0.025).minLearningRate(0.001).batchSize(1000)
 				.epochs(20).iterate(iterator).trainWordVectors(true).tokenizerFactory(tokenizerFactory).build();
 		paragraphVectors.fit();
+		printLabels(paragraphVectors);
 		return paragraphVectors;
 	}
 
@@ -38,7 +40,16 @@ public class CategorizerModel {
 		t.setTokenPreProcessor(new CommonPreprocessor());
 		paragraphVectors.setTokenizerFactory(t);
 		log.debug("Model Load. Configuration {}", paragraphVectors.getConfiguration().toJson());
+		printLabels(paragraphVectors);
 		return paragraphVectors;
+	}
+	
+	private static void printLabels(ParagraphVectors paragraphVectors) {
+		for (VocabWord vWord : paragraphVectors.getVocab().vocabWords()) {
+            if (vWord.isLabel()) {
+               log.debug("Label: {}", vWord.getLabel());
+            }
+        }
 	}
 
 }
