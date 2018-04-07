@@ -60,7 +60,7 @@ public class Main {
 			public void execute(String[] args) throws IOException {
 				String model = findValue(MODEL, args, true);
 				String train = findValue(TRAIN, args, true);
-				ParagraphVectors paragraphVectors = CategorizerModel.createFromList(getFromZip(train));
+				ParagraphVectors paragraphVectors = CategorizerModel.createFromFile(new File(train));
 				CategorizerModel.saveModel(new File(model), paragraphVectors);
 			}
 		}, 

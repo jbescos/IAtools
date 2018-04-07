@@ -15,8 +15,11 @@ public class VectorCategorizer implements ICategorizer {
 	}
 
 	@Override
-	public String categorize(String text) {
-		return paragraphVectors.predict(text);
+	public String categorize(String rawText) {
+		if(rawText == null) {
+			throw new IllegalArgumentException("Input text is empty");
+		}
+		return paragraphVectors.predict(rawText);
 	}
 
 }
