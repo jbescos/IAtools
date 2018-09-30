@@ -34,7 +34,10 @@ public class CategorizerModel {
 		WordVectorSerializer.writeParagraphVectors(paragraphVectors, output);
 	}
 
-	public static ParagraphVectors loadModel(File model) throws IOException {
+	public static ParagraphVectors loadModel(File model) throws IOException  {
+		if(model == null || !model.exists()) {
+			throw new IllegalArgumentException("Invalid model file "+model);
+		}
 		ParagraphVectors paragraphVectors = WordVectorSerializer.readParagraphVectors(model);
 		TokenizerFactory t = new DefaultTokenizerFactory();
 		t.setTokenPreProcessor(new CommonPreprocessor());
